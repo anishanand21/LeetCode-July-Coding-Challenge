@@ -1,0 +1,54 @@
+Given two numbers, hour and minutes. Return the smaller angle (in degrees) formed between the hour and the minute hand.
+
+Example 1:
+Input: hour = 12, minutes = 30
+Output: 165
+
+Example 2:
+Input: hour = 3, minutes = 30
+Output: 75
+
+Example 3:
+Input: hour = 3, minutes = 15
+Output: 7.5
+
+Example 4:
+Input: hour = 4, minutes = 50
+Output: 155
+
+Approach:-
+
+1. Hour hand
+  The clock is 360deg. Make 4 parts each part is 90deg. 15 min = 90deg. So 5 min = 30 deg.
+  So every hour our hour hand goes forward 30 deg.
+  
+2. Minute hand.
+  As 5 min = 30 deg. So 1 min = 30/5 = 6 deg.
+  if it is 30 min -> deg is 6 * 30 = 180 deg
+
+3. Relation between hour and minute hand (Hint 1)
+  Now if minute hand is at 6 i.e. 30 min hour hand goes to 2.5 min.
+  i.e. out of 60 min hand covers 30 min and out of 5 min hour hand covers 2.5.
+  We can see the ratio here.
+  so for every minute hour hand goes by 0.5 minutes.
+  So we can find both hour angle and minute angle and see their difference. Also as the question wants us to return the shorter angle we can to perforn 360 - diff and see if it smaller than diff.
+
+Steps:
+
+1. For hour hand we perform hour % 12 and then mutilply it to magnitude of 30deg.
+    hour_angle = (hour % 12 ) * 30 + ratio - ratio = minutes * 0.5
+2. For minute hand - minutes*6 degrees
+3. calculate difference between the two angles - abs(h_angle - min_angle)
+4. Check the shorter angle min(diff,360-diff)
+5. Complete
+
+CODE:-
+class Solution {
+public:
+    double angleClock(int hour, int minutes) {
+        double hour_angle = (hour % 12 ) * 30 + minutes * 0.5;
+        double minute_angle = minutes * 6;
+        double diff = abs(hour_angle - minute_angle);
+        return min(diff, 360 - diff);
+    }
+};
