@@ -1,0 +1,82 @@
+Given inorder and postorder traversal of a tree, construct the binary tree.
+Note:
+You may assume that duplicates do not exist in the tree.
+
+For example, given
+inorder = [9,3,15,20,7]
+postorder = [9,15,7,20,3]
+Return the following binary tree:
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+Let's take an Example
+
+    inorder   = [4 2 5 1 6 3 7]
+    postorder = [4 5 2 6 7 3 1]
+
+    So root would be 1 here and Left array which lay left of 1 is [4 2 5] and Right of 1 is [6 3 7]
+    so left_inorder_array =  [4 2 5] and right_inorder_arry = [6 3 7]
+
+    using 6 [ which is just rigth of 1] we are going to devide Postorder_array into two part
+    [4 5 2] and [6 7 3]
+
+
+    1st Phase=>        1
+
+                   /        \
+
+                [4 2 5]   [6 3 7]
+                [4 5 2]   [6 7 3]
+
+    2nd Phase =>
+                           1
+
+                      /        \
+                     2          3
+                [4]    [5]   [6]   [7]
+                [4]    [5]   [6]   [7]
+
+    3rd Phase =>  1
+
+               /    \
+              2      3
+ 
+            /  \    /  \             <==== Answer
+ 
+           4    5  6    7
+           
+class Solution {
+public:
+
+    	// variable key: 
+	// in -> inorder array
+	// ins -> inorder start index
+	// ine -> inorder end index
+	// post -> postorder array
+	// posts -> postorder start index
+	// poste -> postorder end index
+
+    TreeNode* buildTreeUtil(vector<int>& in, int ins, int ine, vector<int>& post, int posts, int poste) {
+        
+        if(ins>ine || posts>poste) return NULL;
+        
+        int rval=post[poste]; // root value
+        TreeNode* root = new TreeNode(rval);
+        
+        int i=ins;
+        while(in[i] != rval) i++;
+        
+        root->left = buildTreeUtil(in, ins, i-1, post, posts, posts+i-(ins+1));
+        root->right = buildTreeUtil(in, i+1, ine, post, posts+i-ins, poste-1);
+        return root;
+        
+    }
+    
+    TreeNode* buildTree(vector<int>& in, vector<int>& post) {
+        return buildTreeUtil(in, 0, in.size()-1, post, 0, post.size()-1);
+    }
+};
